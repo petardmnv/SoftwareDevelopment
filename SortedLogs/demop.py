@@ -5,8 +5,11 @@ logs = [
     {"timestamp": "2020-05-11T13:44:30", "status": "success", "countryISO2": "NZ"},
 ]
 
-res = list(logs[0].items())
-print(res1)
+
+search = {"status": "success", "countryISO2": "NZ"}
+for log in logs:
+    if search.items() <= log.items():
+        print(log)
 
 
 

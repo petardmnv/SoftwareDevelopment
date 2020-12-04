@@ -8,7 +8,7 @@ class Turtle:
     is_spawned: bool
     orientation: str
 
-    def __init__(self, x, y):
+    def __init__(self, x: int, y: int):
         self.row = x
         self.column = y
         self.x = 0
@@ -17,7 +17,7 @@ class Turtle:
         self.is_spawned = False
         self.orientation = "right"
 
-    def spawn_at(self, row, column):
+    def spawn_at(self, row: int, column: int):
         self.is_spawned = True
         self.x = row
         self.y = column
@@ -27,7 +27,7 @@ class Turtle:
         if not self.is_spawned:
             raise RuntimeError
 
-        orientations = {"left": [0, -1], "up": [-1, 0], "right": [0, 1], "down": [1, 0]}
+        orientations: dict = {"left": [0, -1], "up": [-1, 0], "right": [0, 1], "down": [1, 0]}
         x, y = orientations[self.orientation]
         self.x += x
         self.y += y
@@ -45,16 +45,16 @@ class Turtle:
             self.y = 0
 
     def turn_right(self):
-        orientations = ("left", "up", "right", "down")
-        index = orientations.index(self.orientation) + 1
+        orientations: tuple = ("left", "up", "right", "down")
+        index: int = orientations.index(self.orientation) + 1
         if index >= len(orientations):
             index = 0
         self.orientation =\
             orientations[index]
 
     def turn_left(self):
-        orientations = ("left", "up", "right", "down")
-        index = orientations.index(self.orientation) -1
+        orientations: tuple = ("left", "up", "right", "down")
+        index: int = orientations.index(self.orientation) -1
         if index < 0:
             index = len(orientations) - 1
         self.orientation =\
@@ -62,18 +62,37 @@ class Turtle:
 
 
 class SimpleCanvas:
-    pass
+    canvas: List[List[int]]
+    symbols: List[str]
+
+    def __init__(self, canvas: list, symbols: list):
+        self.symbols = symbols
+        self.canvas = canvas
+
+    def draw(self): #-> str:
+        canvas_rows: int = len(self.canvas)
+        canvas_columns: int = len(self.canvas[0])
+        pixels_count: int = sum([self.canvas[i][j] for j in range(canvas_columns) for i in range(canvas_rows)])
+
+        pixelized_cnavas: List[List[float]] = [[0.00] * canvas_columns for i in range(canvas_rows)]
+        for i in range(canvas_rows):
+            for j in range(canvas_columns):
+                pixelized_cnavas[i][j] = self.canvas[i][j] / pixels_count
+        return pixelized_cnavas
 
 
 turtle = Turtle(3, 3)
 turtle.spawn_at(0, 0)
-turtle.move()
+for i in range(9):
+    turtle.move()
 turtle.turn_right()
-turtle.move()
-turtle.move()
+for i in range(4):
+    turtle.move()
 turtle.turn_left()
 turtle.move()
 turtle.move()
 turtle.turn_right()
 turtle.move()
 print(turtle.canvas)
+canvas = SimpleCanvas(turtle.canvas, [' ', '*', '@', '#'])
+print(canvas.draw())

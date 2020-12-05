@@ -1,8 +1,6 @@
-from Turtle import turtle
 import unittest
 
-from solution import SimpleCanvas
-from solution import Turtle
+from solution.turtle import SimpleCanvas, Turtle
 
 
 class SolutionTest(unittest.TestCase):

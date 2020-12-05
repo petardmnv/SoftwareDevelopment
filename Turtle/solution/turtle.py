@@ -1,6 +1,7 @@
 from typing import List
 
 
+# KISS
 class Turtle:
     canvas: List[List[int]]
     x: int
@@ -35,18 +36,20 @@ class Turtle:
         x, y = orientations[self.orientation]
         self.x += x
         self.y += y
-        self.transfer()
+        self.x, self.y = self.transfer(self.x, self.y)
         self.canvas[self.x][self.y] += 1
 
-    def transfer(self):
-        if self.x < 0:
-            self.x = self.row - 1
-        elif self.x >= self.row:
-            self.x = 0
-        if self.y < 0:
-            self.y = self.column - 1
-        elif self.y >= self.column:
-            self.y = 0
+    # ugly :'(
+    def transfer(self, x, y) -> list:
+        if x < 0:
+            x = self.row - 1
+        elif x >= self.row:
+            x = 0
+        if y < 0:
+            y = self.column - 1
+        elif y >= self.column:
+            y = 0
+        return [x, y]
 
     def turn_right(self):
         orientations: tuple = ("left", "up", "right", "down")
@@ -57,7 +60,7 @@ class Turtle:
 
     def turn_left(self):
         orientations: tuple = ("left", "up", "right", "down")
-        index: int = orientations.index(self.orientation) -1
+        index: int = orientations.index(self.orientation) - 1
         if index < 0:
             index = len(orientations) - 1
         self.orientation = orientations[index]
@@ -71,7 +74,7 @@ class SimpleCanvas:
         self.symbols = symbols
         self.canvas = canvas
 
-    def draw(self) -> List[List[str]]:
+    def draw(self) -> str:
         canvas_rows: int = len(self.canvas)
         canvas_columns: int = len(self.canvas[0])
         pixels_count: int = max([self.canvas[i][j] for j in range(canvas_columns) for i in range(canvas_rows)])
@@ -84,7 +87,7 @@ class SimpleCanvas:
             for j in range(canvas_columns):
                 pixelated_canvas[i][j] = self.canvas[i][j] / pixels_count
 
-                #drawing canvas
+                # drawing canvas
                 if 0 == pixelated_canvas[i][j]:
                     draw_canvas[i][j] = self.symbols[0]
 
@@ -96,4 +99,11 @@ class SimpleCanvas:
                 if ((1 - symbols_range) < pixelated_canvas[i][j]) and (1 >= pixelated_canvas[i][j]):
                     draw_canvas[i][j] = self.symbols[len(self.symbols) - 1]
 
-        return draw_canvas
+        return self.format_canvas(draw_canvas)
+
+    @staticmethod
+    def format_canvas(canvas: List[List[str]]) -> str:
+        result: list = []
+        for i in range(len(canvas)):
+            result.append(''.join(canvas[i]))
+        return '\n'.join(result)
